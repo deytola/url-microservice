@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { classToPlain } from 'class-transformer';
 import { CreateUserDTO } from 'src/users/DTOs/CreateUser.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -23,9 +22,10 @@ export class UsersService {
             user.lastName = createUserDto.lastName;
             user.email = createUserDto.email;
             user.password = createUserDto.password;
-            const savedUser = await this.userRepository.save(user);
+            const savedUser = (await this.userRepository.save(user));
+            delete savedUser.password;
             return {
-                token: this.jwtService.sign({user: savedUser, sub: savedUser.id}),
+                token: this.jwtService.sign({...savedUser, sub: savedUser.id}),
                 user
             }
         }else{
@@ -39,7 +39,7 @@ export class UsersService {
     }
     
     findOne(id: number): Promise<User> {
-        return this.userRepository.findOneBy({ id });
+        return this.userRepository.findOneBy({id});
     }
     
     findOneByEmail(email: string): Promise<User> {

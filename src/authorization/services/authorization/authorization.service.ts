@@ -18,7 +18,7 @@ export class AuthorizationService {
       }
 
 
-    async login(userLoginDTO: UserLoginDTO): Promise<any> {  
+    async login(userLoginDTO: UserLoginDTO): Promise<{token: string, user: User}> {  
         const savedUser = await this.userService.findOneByEmail(userLoginDTO.email);
         if(!savedUser){
             throw new BadRequestException('Invalid credentials');
@@ -26,9 +26,12 @@ export class AuthorizationService {
         if(!await bcrypt.compare(userLoginDTO.password, savedUser.password)){
             throw new BadRequestException('Invalid credentials');
         }
+        savedUser.lastLoginDate = new Date()
+        await savedUser.save();
+        delete savedUser.password;
         return {
             token: this.jwtService.sign({
-                user: savedUser,
+                ...savedUser,
                 sub: savedUser.id
             }),
             user: savedUser

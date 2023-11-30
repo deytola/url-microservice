@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsDate } from 'class-validator';
+import { Url } from 'src/urls/entities/url.entity';
 
 export class CreateUserDTO {
   @IsNotEmpty()
@@ -12,4 +13,10 @@ export class CreateUserDTO {
   
   @IsNotEmpty()
   password: string;
+
+  lastLoginDate?: Date;
+
+  createdAt?: Date;
+
+  updatedAt?: Date;
 }
