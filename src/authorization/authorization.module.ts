@@ -9,6 +9,7 @@ import { UsersService } from 'src/users/services/users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { AuthorizationGuard } from './guards/authorization.guard';
+import { Role } from 'src/users/entities/role.entity';
 
 
 @Module({
@@ -18,7 +19,7 @@ import { AuthorizationGuard } from './guards/authorization.guard';
     signOptions: {expiresIn: '1d'},
   }), 
   PassportModule,
-  TypeOrmModule.forFeature([User]),
+  TypeOrmModule.forFeature([User, Role]),
 ],
   controllers: [AuthorizationController],
   providers: [AuthorizationService, ConfigService, LocalStrategy, UsersService],

@@ -2,6 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDTO } from 'src/users/DTOs/CreateUser.dto';
+import { RoleName } from 'src/users/constants/roles.contants';
+import { Role } from 'src/users/entities/role.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -10,23 +12,32 @@ export class UsersService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(Role)
+        private readonly rolesRepository: Repository<Role>,
         private jwtService: JwtService
     ){}
 
     async create(createUserDto: CreateUserDTO): Promise<any> {
 
-        const foundUser = await this.findOneByEmail(createUserDto.email)
+        const foundUser = await this.findOneByEmail(createUserDto.email);
         if(!foundUser){
             const user = new User();
             user.firstName = createUserDto.firstName;
             user.lastName = createUserDto.lastName;
             user.email = createUserDto.email;
             user.password = createUserDto.password;
-            const savedUser = (await this.userRepository.save(user));
-            delete savedUser.password;
-            return {
-                token: this.jwtService.sign({...savedUser, sub: savedUser.id}),
+            const savedUser = await this.userRepository.save(user);
+            const defaultRole = this.rolesRepository.create({
+                name: RoleName.USER,
                 user
+            });
+            await defaultRole.save();
+            user.roles = [defaultRole];
+            savedUser.save();
+            const { password, ...userWithoutPassword } = savedUser;
+            return {
+                token: this.jwtService.sign({...userWithoutPassword, sub: savedUser.id}),
+                user: userWithoutPassword
             }
         }else{
             throw new BadRequestException('User email already exists');

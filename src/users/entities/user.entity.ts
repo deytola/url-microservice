@@ -1,10 +1,14 @@
 import { Exclude } from "class-transformer";
-import {  IsArray, IsOptional } from "class-validator";
 import { Url } from "src/urls/entities/url.entity";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { 
+    BaseEntity, Column, CreateDateColumn, 
+    Entity, JoinTable, ManyToMany, OneToMany, 
+    PrimaryGeneratedColumn, UpdateDateColumn 
+} from "typeorm";
+import { Role } from "./role.entity";
 
 @Entity()
-export class User extends BaseEntity{
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn({})
     id: number;
 
@@ -23,8 +27,8 @@ export class User extends BaseEntity{
         unique: true
     })
     email: string;
-    
-    @Column({ 
+
+    @Column({
         type: 'date',
         nullable: true
     })
@@ -37,13 +41,16 @@ export class User extends BaseEntity{
     @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
 
-    
+
     @Exclude({ toPlainOnly: true })
     @Column({
         type: 'varchar',
     })
     password: string;
 
-    @OneToMany(() => Url, url => url.user)
+    @OneToMany(() => Url, url => url.user, { eager: true })
     urls: Url[];
+
+    @OneToMany(() => Role, role => role.user, { eager: false })
+    roles: Role[];
 }
