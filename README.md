@@ -5,7 +5,7 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">An efficient URL shortener microservice framework for building efficient and scalable server-side applications.</p>
+  <p align="center">An efficient URL shortener microservice built using [Nest](https://github.com/nestjs/nest) framework.</p>
     <p align="center">
 </p>
 
