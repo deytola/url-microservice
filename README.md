@@ -13,6 +13,19 @@
 
 A Microservice developed using [Nest](https://github.com/nestjs/nest) framework and TypeScript.
 
+## Technologies
+
+
+- [Nest.js](https://nestjs.com/)
+- [postgreSQL](https://www.postgresql.org/)
+- [Prettier](https://prettier.io/).
+- [ESLint](https://eslint.org/).
+- [TypeORM](https://typeorm.io/).
+
+## Testing Tools
+
+- [Jest](https://jestjs.io/).
+
 ## Installation
 
 ```bash
