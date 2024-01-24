@@ -1,9 +1,17 @@
 // url.entity.ts
-import { User } from 'src/users/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class Url extends BaseEntity{
+export class Url extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,7 +21,7 @@ export class Url extends BaseEntity{
   originalUrl: string;
 
   @Column({
-    type: 'varchar'
+    type: 'varchar',
   })
   shortenedUrl: string;
 
@@ -22,7 +30,7 @@ export class Url extends BaseEntity{
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-  
-  @ManyToOne(() => User, user => user.urls)
+
+  @ManyToOne(() => User, (user) => user.urls)
   user: User;
 }
